@@ -8,6 +8,7 @@ if (!array_key_exists("categories", $_COOKIE)) {
     setcookie("categories", json_encode(array()), time() + 1000000, "/");
 }
 
+//Получение данных из cookie
 $categories->categoriesArray = json_decode($_COOKIE['categories'], true);
 $money = $_COOKIE['money'];
 $categories->betweenValue = $_COOKIE['betweenValue'];
