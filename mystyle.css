@@ -1,8 +1,9 @@
-#money {
+#moneyChart {
     width: 30%;
     margin: 0 auto;
     text-align: center;
     align-content: center;
+    background-color: #f2f2f2;
 }
 
 .gradient-button[name="resetButton"],

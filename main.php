@@ -36,14 +36,14 @@ $money = $_COOKIE['money'];
                 is3D: true,
                 pieResidueSliceLabel: 'Остальное'
             };
-            var chart = new google.visualization.PieChart(document.getElementById('money'));
+            var chart = new google.visualization.PieChart(document.getElementById('moneyChart'));
             chart.draw(data, options);
         }
     </script>
 </head>
 <body style="text-align:center;">
-<h1>Кошелёк</h1>
-<h4>Тинькофф Банк</h4>
+<h1 style="font-family: 'Courier New'">Кошелёк</h1>
+<h3 style="font-family: 'Courier New'">Тинькофф Банк</h3>
 
 <?php
 
@@ -115,7 +115,7 @@ $categories->echoStats();
            class="gradient-button" value="RESET"/>
 </form>
 
-<div id="money" style="width: 500px; height: 400px;"></div>
+<div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
 
 </body>
 </html>
