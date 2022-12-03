@@ -4,3 +4,42 @@
     text-align: center;
     align-content: center;
 }
+
+.gradient-button[name="resetButton"],
+.gradient-button[name="resetCategoriesButton"],
+.gradient-button[name="addButton"],
+.gradient-button[name="subtractButton"] {
+    height: 21px;
+    text-decoration: none;
+    display: inline-block;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background-image: linear-gradient(to right, #f2f2f2 0%, #a6a6a6 51%, #666666 100%);
+    background-size: 200% auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+    transition: .5s;
+}
+
+.gradient-button[name="resetButton"],
+.gradient-button[name="resetCategoriesButton"] {
+    width: 100px;
+}
+
+.gradient-button[name="addButton"] {
+    height: 21px;
+    width: 30px;
+    background-image: linear-gradient(to right, #808080 0%, #4dff4d 51%, #00e600 100%);
+}
+
+.gradient-button[name="subtractButton"] {
+    height: 21px;
+    width: 30px;
+    background-image: linear-gradient(to right, #808080 0%, #990000 51%, #ff0000 100%);
+}
+.gradient-button:hover {
+    background-position: right center;
+}

@@ -4,15 +4,9 @@
 include 'categories.php';
 $categories = new Categories();
 
-if (!array_key_exists("categories", $_COOKIE)) {
-    setcookie("categories", json_encode(array()), time() + 1000000, "/");
-}
-
 //Получение данных из cookie
-$categories->categoriesArray = json_decode($_COOKIE['categories'], true);
+$categories->getDataFromCookie();
 $money = $_COOKIE['money'];
-$categories->betweenValue = $_COOKIE['betweenValue'];
-
 ?>
 
 <html>
@@ -69,10 +63,11 @@ if ($_POST) {
         $categories->categoriesArray = array();
     } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         $money = $_POST['moneyField'] + $_POST['betweenMoneyField'];
-    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] < $_POST['moneyField'])) {
+    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $_POST['moneyField'])) {
         $money = $_POST['moneyField'] - $_POST['betweenMoneyField'];
         setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 1000000, "/");
-        header("Location:http://localhost:63342/phpProjects/categoriesPage.php");
+        setcookie("money", $money, time() + 1000000, "/");
+        header("Location:http://localhost:63342/" . basename(getcwd()) . "/categoriesPage.php");
     }
 }
 
@@ -83,48 +78,41 @@ foreach ($_POST as $key => $value) {
         } else {
             $categories->categoriesArray[$key] += $categories->betweenValue;
         }
-        setcookie("betweenValue", 0, time() + 1000000, "/");
+        $categories->setDataInCookie("betweenValue");
     }
 }
 
-//Хрен пойми зачем, но пока пускай лежит
-/*$_COOKIE['money'] = $_POST['moneyField'];
-$_COOKIE['categories'] = json_encode($categories->categoriesArray);*/
-
-setcookie("categories", json_encode($categories->categoriesArray), time() + 1000000, "/");
-setcookie("money", $money, time() + 1000000, "/");
+$categories->setDataInCookie("categories");
 ?>
 
 <form method="post">
     <input type="text" name="moneyField" readonly="readonly" size="20" value=<?php echo htmlspecialchars($money); ?>>
 
     <input type="submit" name="resetButton"
-           class="button" value="Reset"/>
+           class="gradient-button" value="Reset"/>
 
     <br/><br/>
 
     <input type="submit" name="subtractButton"
-           class="button" value="-"/>
+           class="gradient-button" value="-"/>
 
-    <input type="text" name="betweenMoneyField" size="13">
+    <input class="text-field" type="text" name="betweenMoneyField"
+           onkeyup="this.value = this.value.replace(/[^\d]/g,'');" size="13">
 
     <input type="submit" name="addButton"
-           class="button" value="+"/>
+           class="gradient-button" value="+"/>
 
     <br/>
     <br/>
 </form>
 
 <?php
-foreach ($categories->categoriesArray as $key => $value) {
-    echo $key . ": " . $value . "\t(" . round($categories->categoriesArray[$key] / array_sum($categories->categoriesArray), 4) * 100 . "%)" . "<br/>";
-}
-echo "<br/>Всего потрачено: " . array_sum($categories->categoriesArray);
+$categories->echoStats();
 ?>
 
 <form method="post">
     <input type="submit" name="resetCategoriesButton"
-           class="button" value="RESET"/>
+           class="gradient-button" value="RESET"/>
 </form>
 
 <div id="money" style="width: 500px; height: 400px;"></div>
