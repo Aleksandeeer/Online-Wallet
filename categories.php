@@ -6,6 +6,8 @@ class Categories{
     //Конструктор
     public function __construct()
     {
+        $this->categoriesArray = array(6);
+
         if (!array_key_exists("categories", $_COOKIE)) {
             setcookie("categories", json_encode(array()), time() + 1000000, "/");
         }
@@ -20,10 +22,12 @@ class Categories{
 
     //Установление значений cookie
     public function setDataInCookie($cookieType){
-        if($cookieType == "betweenValue")
-            setcookie("betweenValue", 0, time() + 1000000, "/");
-        else if($cookieType == "categories")
+        if($cookieType == "categories")
+            //Для массива категорий
             setcookie("categories", json_encode($this->categoriesArray), time() + 1000000, "/");
+        else
+            //Для всего остального
+            setcookie($cookieType, 0, time() + 1000000, "/");
 
     }
 
@@ -34,6 +38,16 @@ class Categories{
             echo $key . ": " . $value . "\t(" . round($this->categoriesArray[$key] / array_sum($this->categoriesArray), 4) * 100 . "%)" . "<br/>";
         }
         echo "<br/>Всего потрачено: " . array_sum($this->categoriesArray);
+    }
+
+    //$result == $->query->fetchAll
+    public function DataFromDB($result): void
+    {
+        foreach ($result as $row) {
+            $this->categoriesArray[$row['category']] = $row['spent'];
+
+            echo $row['category'] . ": " . $row['spent'] . "<br/>";
+        }
     }
 
 }

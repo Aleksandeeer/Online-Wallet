@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
 <?php
+//Инициализация класса категорий
 include 'categories.php';
 $categories = new Categories();
+
+//Подключение к базе данных
 $database = new PDO('sqlite:categoriesDB.db');
 $result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($result as $row) {
-    echo $row['category'] . ": " . $row['spent'] . "<br/>";
-}
-
+//Вычленение данных из базы в класс (пока что только вывод, без присвоения)
+$categories->DataFromDB($result);
 
 //Получение данных из cookie
 $categories->getDataFromCookie();
@@ -75,17 +76,19 @@ if ($_POST) {
         $money = $_POST['moneyField'] + $_POST['betweenMoneyField'];
     } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $_POST['moneyField'])) {
         $money = $_POST['moneyField'] - $_POST['betweenMoneyField'];
-        setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 1000000, "/");
+        setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");
         setcookie("money", $money, time() + 1000000, "/");
+
+        $database->exec('UPDATE categoriesTable SET spent = ' . $money . " WHERE category = 'money'");
         header("Location:http://localhost:63342/" . basename(getcwd()) . "/categoriesPage.php");
     }
 }
 
+//Сохранение текущей затраты в соответствующую категорию
 foreach ($_POST as $key => $value) {
     if ($value == "on") {
         if (!array_key_exists($key, $categories->categoriesArray)) {
             $categories->categoriesArray[$key] = $categories->betweenValue;
-            echo $key;
         } else {
             $categories->categoriesArray[$key] += $categories->betweenValue;
         }
@@ -93,7 +96,16 @@ foreach ($_POST as $key => $value) {
     }
 }
 
-$categories->setDataInCookie("categories");
+//$categories->setDataInCookie("categories");
+
+//Запись данных в базу данных
+
+/*$database->prepare("UPDATE categoriesTable SET spent = ? WHERE category = ?");
+foreach ($result as $row) {
+    $database->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] .
+        " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";");
+}*/
+
 ?>
 
 <form method="post">
