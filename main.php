@@ -2,7 +2,6 @@
 
 <?php
 include 'categories.php';
-include 'Database.php';
 $categories = new Categories();
 $database = new PDO('sqlite:categoriesDB.db');
 $result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
