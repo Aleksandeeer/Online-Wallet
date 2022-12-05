@@ -51,9 +51,10 @@ if ($_POST) {
 
     //Проверки
     if (($_POST['betweenMoneyField'] > $_POST['moneyField']) && isset($_POST['subtractButton'])) {
-        echo "Warning: the subtracted value is more than the quantity / Предупреждение: вычитаемое количество денег больше количества денег";
+        echo '<script>alert("Warning: the subtracted value is more than the quantity\n\n" +
+ "Предупреждение: вычитаемое количество денег больше количества денег")</script>';
     } else if ((isset($_POST['addButton']) || isset($_POST['subtractButton'])) && $_POST['betweenMoneyField'] == '') {
-        echo "Warning: the intermediate value is empty / Предупреждение: промежуточное значение пустое";
+        echo '<script>alert("Warning: the intermediate value is empty / Предупреждение: промежуточное значение пустое")</script>';
     }
 
     //Действия кнопок
