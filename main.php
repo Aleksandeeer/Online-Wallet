@@ -2,11 +2,21 @@
 
 <?php
 include 'categories.php';
+include 'Database.php';
 $categories = new Categories();
+$database = new PDO('sqlite:categoriesDB.db');
+$result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($result as $row) {
+    echo $row['category'] . ": " . $row['spent'] . "<br/>";
+}
+
 
 //Получение данных из cookie
 $categories->getDataFromCookie();
 $money = $_COOKIE['money'];
+
+
 ?>
 
 <html>
@@ -76,6 +86,7 @@ foreach ($_POST as $key => $value) {
     if ($value == "on") {
         if (!array_key_exists($key, $categories->categoriesArray)) {
             $categories->categoriesArray[$key] = $categories->betweenValue;
+            echo $key;
         } else {
             $categories->categoriesArray[$key] += $categories->betweenValue;
         }
