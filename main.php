@@ -16,13 +16,17 @@ $categories->getDataFromDataBase($result);
 array_shift($categories->categoriesArray);
 ?>
 
-<html>
+<html lang="ru">
 <head>
     <title>Онлайн кошелёк</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="mystyle.css">
     <script src="https://www.google.com/jsapi"></script>
     <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+
         google.load("visualization", "1", {packages: ["corechart"]});
         google.setOnLoadCallback(drawChart);
 
@@ -51,8 +55,8 @@ array_shift($categories->categoriesArray);
     </script>
 </head>
 <body style="text-align:center;">
-<h1 style="font-family: 'Courier New'">Кошелёк</h1>
-<h3 style="font-family: 'Courier New'">Тинькофф Банк</h3>
+<h1 style="font-family: 'Courier New',sans-serif">Кошелёк</h1>
+<h3 style="font-family: 'Courier New',sans-serif">Тинькофф Банк</h3>
 
 <?php
 
@@ -69,28 +73,26 @@ if ($_POST) {
     //Действия кнопок
     if (isset($_POST['resetButton'])) {
         $categories->categoriesArray['Всего потрачено'] = 0;
-    } else if (isset($_POST['resetCategoriesButton'])) {
+    }
+    else if (isset($_POST['resetCategoriesButton'])) {
         $categories->categoriesArray = array();
-    } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
+    }
+    else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         $categories->categoriesArray['Всего потрачено'] += $_POST['betweenMoneyField'];
-    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Всего потрачено'])) {
+    }
+    else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Всего потрачено'])) {
         $categories->categoriesArray['Всего потрачено'] -= $_POST['betweenMoneyField'];
-        setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");
 
         $database->exec('UPDATE categoriesTable SET spent = ' . $categories->categoriesArray['Всего потрачено'] . " WHERE category = 'Всего потрачено'");
         header("Location:http://localhost:63342/" . basename(getcwd()) . "/categoriesPage.php");
     }
+
+    setcookie("betweenValue", 0, time() + 10000, "/");
 }
 
 //Сохранение текущей затраты в соответствующую категорию
 foreach ($_POST as $key => $value) {
     if ($value == "on") {
-        if (!array_key_exists($key, $categories->categoriesArray)) {
-            $categories->categoriesArray[$key] = $betweenValue;
-        } else {
-            $categories->categoriesArray[$key] += $betweenValue;
-        }
-
         $categories->categoriesArray['Всего потрачено'] += $betweenValue;
         setcookie("betweenValue", 0, time() + 1000000, "/");
         break;
@@ -111,8 +113,10 @@ foreach ($_POST as $key => $value) {
     <input type="submit" name="subtractButton"
            class="gradient-button" value="-"/>
 
-    <input class="text-field" type="text" name="betweenMoneyField"
-           onkeyup="this.value = this.value.replace(/[^\d]/g,'');" size="13">
+    <label>
+        <input class="text-field" type="text" name="betweenMoneyField"
+               onkeyup="this.value = this.value.replace(/[^\d]/g,'');" size="13">
+    </label>
 
     <input type="submit" name="addButton"
            class="gradient-button" value="+"/>
@@ -122,7 +126,7 @@ foreach ($_POST as $key => $value) {
 </form>
 
 <?php
-foreach($categories->categoriesArray as $key => $value){
+foreach ($categories->categoriesArray as $key => $value) {
     echo $key . ": " . $value . "<br/>";
 };
 ?>
