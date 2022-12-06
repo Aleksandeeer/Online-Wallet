@@ -13,6 +13,7 @@ $betweenValue = $_COOKIE['betweenValue'];
 
 //Получение данных из базы данных
 $categories->getDataFromDataBase($result);
+array_shift($categories->categoriesArray);
 ?>
 
 <html>
@@ -89,9 +90,14 @@ foreach ($_POST as $key => $value) {
         } else {
             $categories->categoriesArray[$key] += $betweenValue;
         }
+
+        $categories->categoriesArray['money'] += $betweenValue;
         setcookie("betweenValue", 0, time() + 1000000, "/");
+        break;
     }
 }
+
+var_dump($categories->categoriesArray);
 
 ?>
 
@@ -129,13 +135,12 @@ $categories->echoDataFromDataBase($result);
 <div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
 
 <?php
-//Запись данных в базу данных
+//#1 Запись данных в базу данных
+//#2 МРАКОБЕСЯЩАЯ НЕРАБОЧАЯ ЗАЛУПОНЬ
 foreach ($result as $row) {
-    $database->exec(" UPDATE categoriesTable SET `spent` = " . $categories->categoriesArray[$row['category']] .
-        " WHERE `category` = " . chr(39) . $row['category'] . chr(39) . ";");
+    echo "UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] . " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";" . "<br/>";
+    $database->exec("UPDATE categoriesTable SET 'spent' = " . $categories->categoriesArray[$row['category']] . " WHERE 'category' = " . chr(39) . $row['category'] . chr(39) . ";");
 
-    echo " UPDATE categoriesTable SET `spent` = " . $categories->categoriesArray[$row['category']] .
-        " WHERE `category` = " . chr(39) . $row['category'] . chr(39) . ";";
 }
 ?>
 

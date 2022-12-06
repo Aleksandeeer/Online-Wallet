@@ -15,12 +15,12 @@
     </div>
 
     <div>
-        <input type="checkbox" id="not-home-food" name="Еда (не дома)">
+        <input type="checkbox" id="not-home-food" name="Еда_(не_дома)">
         <label for="not-home-food">Еда (не дома)</label><br>
     </div>
 
     <div>
-        <input type="checkbox" id="transport" name="Общественный транспорт">
+        <input type="checkbox" id="transport" name="Общественный_транспорт">
         <label for="transport"">Общественный транспорт</label><br>
     </div>
 
