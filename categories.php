@@ -13,6 +13,12 @@ class Categories{
         }
     }
 
+    public function getDataFromDataBase($result){
+        foreach ($result as $row) {
+            $this->categoriesArray[$row['category']] = $row['spent'];
+        }
+    }
+
     //Получения значений из cookie
     public function getDataFromCookie(): void
     {
@@ -31,17 +37,8 @@ class Categories{
 
     }
 
-    //Вывод статистики по всем затратам
-    public function echoStats(): void
-    {
-        foreach ($this->categoriesArray as $key => $value) {
-            echo $key . ": " . $value . "\t(" . round($this->categoriesArray[$key] / array_sum($this->categoriesArray), 4) * 100 . "%)" . "<br/>";
-        }
-        echo "<br/>Всего потрачено: " . array_sum($this->categoriesArray);
-    }
-
     //$result == $->query->fetchAll
-    public function DataFromDB($result): void
+    public function echoDataFromDataBase($result): void
     {
         foreach ($result as $row) {
             $this->categoriesArray[$row['category']] = $row['spent'];
@@ -49,6 +46,5 @@ class Categories{
             echo $row['category'] . ": " . $row['spent'] . "<br/>";
         }
     }
-
 }
 ?>

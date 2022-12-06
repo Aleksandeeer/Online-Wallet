@@ -9,14 +9,8 @@ $categories = new Categories();
 $database = new PDO('sqlite:categoriesDB.db');
 $result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
 
-//Вычленение данных из базы в класс (пока что только вывод, без присвоения)
-$categories->DataFromDB($result);
-
-//Получение данных из cookie
-$categories->getDataFromCookie();
-$money = $_COOKIE['money'];
-
-
+//Получение данных из базы данных
+$categories->getDataFromDataBase($result);
 ?>
 
 <html>
@@ -33,6 +27,8 @@ $money = $_COOKIE['money'];
             var data = google.visualization.arrayToDataTable(<?php
                 echo "[['Категория', 'Затраты'],";
                 foreach ($categories->categoriesArray as $key => $value) {
+                    if($key == 'money')
+                        continue;
                     echo "['" . $key . "', " . round($categories->categoriesArray[$key] / array_sum($categories->categoriesArray), 4) * 100 . "]";
                     if ($key == array_key_last($categories->categoriesArray)) {
                         continue;
@@ -98,14 +94,6 @@ foreach ($_POST as $key => $value) {
 
 //$categories->setDataInCookie("categories");
 
-//Запись данных в базу данных
-
-/*$database->prepare("UPDATE categoriesTable SET spent = ? WHERE category = ?");
-foreach ($result as $row) {
-    $database->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] .
-        " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";");
-}*/
-
 ?>
 
 <form method="post">
@@ -130,7 +118,7 @@ foreach ($result as $row) {
 </form>
 
 <?php
-$categories->echoStats();
+$categories->echoDataFromDataBase($result);
 ?>
 
 <form method="post">
@@ -139,6 +127,14 @@ $categories->echoStats();
 </form>
 
 <div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
+
+<?php
+//Запись данных в базу данных
+foreach ($result as $row) {
+    $database->exec(" UPDATE categoriesTable SET `spent` = " . $categories->categoriesArray[$row['category']] .
+        " WHERE `category` = " . chr(39) . $row['category'] . chr(39) . ";");
+}
+?>
 
 </body>
 </html>
