@@ -24,7 +24,6 @@ class Categories{
     public function echoDataFromDataBase($result): void
     {
         foreach ($result as $row) {
-            $this->categoriesArray[$row['category']] = $row['spent'];
 
             echo $row['category'] . ": " . $row['spent'] . "<br/>";
         }

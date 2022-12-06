@@ -30,7 +30,7 @@ array_shift($categories->categoriesArray);
             var data = google.visualization.arrayToDataTable(<?php
                 echo "[['Категория', 'Затраты'],";
                 foreach ($categories->categoriesArray as $key => $value) {
-                    if ($key == 'money')
+                    if ($key == 'Всего потрачено')
                         continue;
                     echo "['" . $key . "', " . round($categories->categoriesArray[$key] / array_sum($categories->categoriesArray), 4) * 100 . "]";
                     if ($key == array_key_last($categories->categoriesArray)) {
@@ -59,7 +59,7 @@ array_shift($categories->categoriesArray);
 if ($_POST) {
 
     //Проверки
-    if (($_POST['betweenMoneyField'] > $categories->categoriesArray['money']) && isset($_POST['subtractButton'])) {
+    if (($_POST['betweenMoneyField'] > $categories->categoriesArray['Всего потрачено']) && isset($_POST['subtractButton'])) {
         echo '<script>alert("Warning: the subtracted value is more than the quantity\n\n" +
  "Предупреждение: вычитаемое количество денег больше количества денег")</script>';
     } else if ((isset($_POST['addButton']) || isset($_POST['subtractButton'])) && $_POST['betweenMoneyField'] == '') {
@@ -68,16 +68,16 @@ if ($_POST) {
 
     //Действия кнопок
     if (isset($_POST['resetButton'])) {
-        $categories->categoriesArray['money'] = 0;
+        $categories->categoriesArray['Всего потрачено'] = 0;
     } else if (isset($_POST['resetCategoriesButton'])) {
         $categories->categoriesArray = array();
     } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
-        $categories->categoriesArray['money'] += $_POST['betweenMoneyField'];
-    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['money'])) {
-        $categories->categoriesArray['money'] -= $_POST['betweenMoneyField'];
+        $categories->categoriesArray['Всего потрачено'] += $_POST['betweenMoneyField'];
+    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Всего потрачено'])) {
+        $categories->categoriesArray['Всего потрачено'] -= $_POST['betweenMoneyField'];
         setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");
 
-        $database->exec('UPDATE categoriesTable SET spent = ' . $categories->categoriesArray['money'] . " WHERE category = 'money'");
+        $database->exec('UPDATE categoriesTable SET spent = ' . $categories->categoriesArray['Всего потрачено'] . " WHERE category = 'Всего потрачено'");
         header("Location:http://localhost:63342/" . basename(getcwd()) . "/categoriesPage.php");
     }
 }
@@ -91,19 +91,17 @@ foreach ($_POST as $key => $value) {
             $categories->categoriesArray[$key] += $betweenValue;
         }
 
-        $categories->categoriesArray['money'] += $betweenValue;
+        $categories->categoriesArray['Всего потрачено'] += $betweenValue;
         setcookie("betweenValue", 0, time() + 1000000, "/");
         break;
     }
 }
 
-var_dump($categories->categoriesArray);
-
 ?>
 
 <form method="post">
     <input type="text" name="moneyField" readonly="readonly" size="20"
-           value=<?php echo htmlspecialchars($categories->categoriesArray['money']); ?>>
+           value=<?php echo htmlspecialchars($categories->categoriesArray['Всего потрачено']); ?>>
 
     <input type="submit" name="resetButton"
            class="gradient-button" value="Reset"/>
@@ -124,7 +122,9 @@ var_dump($categories->categoriesArray);
 </form>
 
 <?php
-$categories->echoDataFromDataBase($result);
+foreach($categories->categoriesArray as $key => $value){
+    echo $key . ": " . $value . "<br/>";
+};
 ?>
 
 <form method="post">
@@ -135,12 +135,9 @@ $categories->echoDataFromDataBase($result);
 <div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
 
 <?php
-//#1 Запись данных в базу данных
-//#2 МРАКОБЕСЯЩАЯ НЕРАБОЧАЯ ЗАЛУПОНЬ
+//Запись данных в базу данных
 foreach ($result as $row) {
-    echo "UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] . " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";" . "<br/>";
-    $database->exec("UPDATE categoriesTable SET 'spent' = " . $categories->categoriesArray[$row['category']] . " WHERE 'category' = " . chr(39) . $row['category'] . chr(39) . ";");
-
+    $database->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] . " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";");
 }
 ?>
 
