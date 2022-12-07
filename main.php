@@ -77,7 +77,13 @@ if ($_POST) {
     }
     else if (isset($_POST['resetCategoriesButton'])) {
         //Обнуление массива
-        $categories->categoriesArray = array();
+        foreach ($categories->categoriesArray as $key=>$value){
+            if($key == 'Доступные средства'){
+                continue;
+            }
+
+            $categories->categoriesArray[$key] = 0;
+        }
     }
     else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         //Добавление средств в наш кошелёк
