@@ -34,7 +34,7 @@ array_shift($categories->categoriesArray);
             var data = google.visualization.arrayToDataTable(<?php
                 echo "[['Категория', 'Затраты'],";
                 foreach ($categories->categoriesArray as $key => $value) {
-                    if ($key == 'Всего потрачено')
+                    if ($key == 'Доступные средства')
                         continue;
                     echo "['" . $key . "', " . round($categories->categoriesArray[$key] / array_sum($categories->categoriesArray), 4) * 100 . "]";
                     if ($key == array_key_last($categories->categoriesArray)) {
@@ -63,7 +63,7 @@ array_shift($categories->categoriesArray);
 if ($_POST) {
 
     //Проверки
-    if (($_POST['betweenMoneyField'] > $categories->categoriesArray['Всего потрачено']) && isset($_POST['subtractButton'])) {
+    if (($_POST['betweenMoneyField'] > $categories->categoriesArray['Доступные средства']) && isset($_POST['subtractButton'])) {
         echo '<script>alert("Warning: the subtracted value is more than the quantity\n\n" +
  "Предупреждение: вычитаемое количество денег больше количества денег")</script>';
     } else if ((isset($_POST['addButton']) || isset($_POST['subtractButton'])) && $_POST['betweenMoneyField'] == '') {
@@ -72,28 +72,33 @@ if ($_POST) {
 
     //Действия кнопок
     if (isset($_POST['resetButton'])) {
-        $categories->categoriesArray['Всего потрачено'] = 0;
+        //Обнуление доступных средств
+        $categories->categoriesArray['Доступные средства'] = 0;
     }
     else if (isset($_POST['resetCategoriesButton'])) {
+        //Обнуление массива
         $categories->categoriesArray = array();
     }
     else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
-        $categories->categoriesArray['Всего потрачено'] += $_POST['betweenMoneyField'];
+        //Добавление средств в наш кошелёк
+        $categories->categoriesArray['Доступные средства'] += $_POST['betweenMoneyField'];
     }
-    else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Всего потрачено'])) {
-        $categories->categoriesArray['Всего потрачено'] -= $_POST['betweenMoneyField'];
+    else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Доступные средства'])) {
+        //Вычитаем трату из наших средств
+        $categories->categoriesArray['Доступные средства'] -= $_POST['betweenMoneyField'];
 
-        $database->exec('UPDATE categoriesTable SET spent = ' . $categories->categoriesArray['Всего потрачено'] . " WHERE category = 'Всего потрачено'");
+        //Записываем трату в куки
+        setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");
+
+        //Редирект на страницу выбора категорий
         header("Location:http://localhost:63342/" . basename(getcwd()) . "/categoriesPage.php");
     }
-
-    setcookie("betweenValue", 0, time() + 10000, "/");
 }
 
 //Сохранение текущей затраты в соответствующую категорию
 foreach ($_POST as $key => $value) {
     if ($value == "on") {
-        $categories->categoriesArray['Всего потрачено'] += $betweenValue;
+        $categories->categoriesArray[$key] += $betweenValue;
         setcookie("betweenValue", 0, time() + 1000000, "/");
         break;
     }
@@ -103,7 +108,7 @@ foreach ($_POST as $key => $value) {
 
 <form method="post">
     <input type="text" name="moneyField" readonly="readonly" size="20"
-           value=<?php echo htmlspecialchars($categories->categoriesArray['Всего потрачено']); ?>>
+           value=<?php echo htmlspecialchars($categories->categoriesArray['Доступные средства']); ?>>
 
     <input type="submit" name="resetButton"
            class="gradient-button" value="Reset"/>
@@ -126,9 +131,16 @@ foreach ($_POST as $key => $value) {
 </form>
 
 <?php
+//Вывод затрат по категориям
 foreach ($categories->categoriesArray as $key => $value) {
+    if ($key == 'Доступные средства')
+        continue;
+
     echo $key . ": " . $value . "<br/>";
 };
+
+//Вывод суммарных затрат
+echo "<br/>Всего потрачено: " . array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'];
 ?>
 
 <form method="post">
