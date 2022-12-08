@@ -163,8 +163,6 @@ foreach ($_POST as $key => $value) {
 <?php
 //Вывод затрат по категориям если мы выбрали какой-то конкретный курс
 if (isset($_POST['currencySelect'])) {
-    echo "_POST: " . $_POST['currencySelect'][0] . "<br/>";
-
     foreach ($categories->categoriesArray as $key => $value) {
         if ($key == 'Доступные средства')
             continue;
