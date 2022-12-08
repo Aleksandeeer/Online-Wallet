@@ -16,6 +16,9 @@ $result = $database->query('SELECT category, spent FROM categoriesTable')->fetch
 //Получение значения из промежуточного поля (если таковое имеется)
 $betweenValue = $_COOKIE['betweenValue'];
 
+//Получение выбранного в последний раз курса к рублю (например, если выбран Евро, то $currentCurrency = ~60)
+$currentCurrency = $_COOKIE['currentCurrency'];
+
 //Получение данных из базы данных
 $categories->getDataFromDataBase($result);
 ?>
@@ -114,34 +117,38 @@ foreach ($_POST as $key => $value) {
 ?>
 
 <form method="post">
-    <input type="text" name="moneyField" readonly="readonly" size="20"
-           value=<?php echo htmlspecialchars($categories->categoriesArray['Доступные средства']); ?>>
-
-    <!--Выпадающий список-->
-    <script>
-        var myParent = document.body;
-        var selectList = document.createElement("select");
-        selectList.id = "mySelect";
-        myParent.appendChild(selectList);
-
-        var currencyArray = <?php echo json_encode($currencyConverter->exchanges)?>;
-
-        var option = document.createElement("option");
-        option.text = 'Российский рубль';
-        option.value = '1';
-        selectList.append(option);
-
-        for (var key in currencyArray) {
-            var option = document.createElement("option");
-            let string = key.substring(1, key.length - 1) + ': ' + currencyArray[key] + '₽';
-            option.text = string;
-            option.value = currencyArray[key];
-            selectList.appendChild(option);
-        }
-    </script>
+    <label>
+        <input type="text" name="moneyField" readonly="readonly" size="20"
+               value=<?php echo htmlspecialchars($categories->categoriesArray['Доступные средства']); ?>>
+    </label>
 
     <input type="submit" name="resetButton"
            class="gradient-button" value="Reset"/>
+
+    <div>
+        <!--Выпадающий список-->
+        <select name='currencySelect[]' id='selectId'>
+            <script>
+                var select = document.getElementById('selectId');
+                var currencyArray = <?php echo json_encode($currencyConverter->exchanges)?>;
+
+                var option = document.createElement("option");
+                option.text = 'Российский рубль';
+                option.value = '1';
+                select.add(option, select[0]);
+                var i = 1;
+
+                for (var key in currencyArray) {
+                    option = document.createElement("option");
+                    option.text = key.substring(1, key.length - 1) + ': ' + currencyArray[key] + '₽';
+                    option.value = currencyArray[key];
+                    select.add(option, select[i]);
+                    i = i + 1;
+                }
+            </script>
+        </select>
+        <input name="acceptSubmit" type="submit" value="Подтвердить"/>
+    </div>
 
     <br/><br/>
 
@@ -161,16 +168,51 @@ foreach ($_POST as $key => $value) {
 </form>
 
 <?php
-//Вывод затрат по категориям
-foreach ($categories->categoriesArray as $key => $value) {
-    if ($key == 'Доступные средства')
-        continue;
+echo $currentCurrency . "<br/>";
+//Вывод затрат по категориям если мы выбрали какой-то конкретный курс
+if ($_POST['currencySelect']) {
+    foreach ($categories->categoriesArray as $key => $value) {
+        if ($key == 'Доступные средства')
+            continue;
 
-    echo $key . ": " . $value . "<br/>";
-};
+        echo $key . ": " . round($categories->categoriesArray[$key] / $_POST['currencySelect'][0], 2) . "<br/>";
+    }
 
-//Вывод суммарных затрат
-echo "<br/>Всего потрачено: " . array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'];
+    //Вывод суммарных затрат
+    echo "<br/>Всего потрачено: " . round((array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'])
+            / $_POST['currencySelect'][0], 2);
+
+    unset($_COOKIE['currentCurrency']);
+    setcookie('currencySelect', $_POST['currencySelect'], time() + 3600, "/");
+
+} //Вывод затрат по категориям если мы выбирали какой-то конкретный курс некоторое время назад
+else if (isset($currentCurrency)) {
+    foreach ($categories->categoriesArray as $key => $value) {
+        if ($key == 'Доступные средства')
+            continue;
+
+        echo $key . ": " . round($categories->categoriesArray[$key] / $currentCurrency, 2) . "<br/>";
+    }
+
+    //Вывод суммарных затрат
+    echo "<br/>Всего потрачено: " . round((array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'])
+            / $currentCurrency, 2);
+
+    //НЕ СОХРАНЯЕТ В КУКИ???
+    setcookie('currencySelect', $currentCurrency, time() + 3600, "/");
+} //Вывод затрат по категориям если мы ничего не выбирали
+else {
+    foreach ($categories->categoriesArray as $key => $value) {
+        if ($key == 'Доступные средства')
+            continue;
+
+        echo $key . ": " . $value . "<br/>";
+    }
+
+    //Вывод суммарных затрат
+    echo "<br/>Всего потрачено: " . array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'];
+}
+
 ?>
 
 <!--Кнопка RESET-->

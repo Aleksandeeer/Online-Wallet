@@ -52,3 +52,15 @@ body{
 h1, h3{
     font-family: 'Courier New',sans-serif;
 }
+
+select{
+    position: absolute;
+    left: 1200px;
+    top: 123px;
+}
+
+input[name="acceptSubmit"]{
+    position: absolute;
+    left: 1570px;
+    top: 123px;
+}
