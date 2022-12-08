@@ -2,10 +2,14 @@
 
 <?php
 //Инициализация класса категорий
-include 'categories.php';
+include 'Classes/categories.php';
+include "Classes/currencyConverter.php";
 $categories = new Categories();
+$currencyConverter = new CurrencyConverter();
 
-//Подключение к базе данных
+$currencyConverter->getCurrency();
+
+//Подключение к базе данных и получение таблицы
 $database = new PDO('sqlite:categoriesDB.db');
 $result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
 
@@ -75,7 +79,7 @@ if ($_POST) {
         //Обнуление доступных средств
         $categories->categoriesArray['Доступные средства'] = 0;
     } else if (isset($_POST['resetCategoriesButton'])) {
-        //Обнуление массива
+        //Обнуление категорий
         foreach ($categories->categoriesArray as $key => $value) {
             if ($key == 'Доступные средства') {
                 continue;
@@ -84,10 +88,10 @@ if ($_POST) {
             $categories->categoriesArray[$key] = 0;
         }
     } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
-        //Добавление средств в наш кошелёк
+        //Добавление средств в кошелёк
         $categories->categoriesArray['Доступные средства'] += $_POST['betweenMoneyField'];
     } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Доступные средства'])) {
-        //Вычитаем трату из наших средств
+        //Вычитаем трату из доступных средств
         $categories->categoriesArray['Доступные средства'] -= $_POST['betweenMoneyField'];
 
         //Записываем трату в куки
@@ -112,6 +116,24 @@ foreach ($_POST as $key => $value) {
 <form method="post">
     <input type="text" name="moneyField" readonly="readonly" size="20"
            value=<?php echo htmlspecialchars($categories->categoriesArray['Доступные средства']); ?>>
+
+    <!--Выпадающий список-->
+    <script>
+        var myParent = document.body;
+        var selectList = document.createElement("select");
+        selectList.id = "mySelect";
+        myParent.appendChild(selectList);
+
+        var currencyArray = <?php echo json_encode($currencyConverter->exchanges)?>;
+
+        for (var key in currencyArray) {
+            var option = document.createElement("option");
+            let string = key.substring(1, key.length - 1) + ': ' + currencyArray[key] + '₽';
+            option.text = string;
+            option.value = currencyArray[key];
+            selectList.appendChild(option);
+        }
+    </script>
 
     <input type="submit" name="resetButton"
            class="gradient-button" value="Reset"/>
