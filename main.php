@@ -126,6 +126,11 @@ foreach ($_POST as $key => $value) {
 
         var currencyArray = <?php echo json_encode($currencyConverter->exchanges)?>;
 
+        var option = document.createElement("option");
+        option.text = 'Российский рубль';
+        option.value = '1';
+        selectList.append(option);
+
         for (var key in currencyArray) {
             var option = document.createElement("option");
             let string = key.substring(1, key.length - 1) + ': ' + currencyArray[key] + '₽';
