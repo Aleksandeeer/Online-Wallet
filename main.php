@@ -23,8 +23,8 @@ array_shift($categories->categoriesArray);
     <link rel="stylesheet" href="mystyle.css">
     <script src="https://www.google.com/jsapi"></script>
     <script>
-        if ( window.history.replaceState ) {
-            window.history.replaceState( null, null, window.location.href );
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
         }
 
         google.load("visualization", "1", {packages: ["corechart"]});
@@ -74,22 +74,19 @@ if ($_POST) {
     if (isset($_POST['resetButton'])) {
         //Обнуление доступных средств
         $categories->categoriesArray['Доступные средства'] = 0;
-    }
-    else if (isset($_POST['resetCategoriesButton'])) {
+    } else if (isset($_POST['resetCategoriesButton'])) {
         //Обнуление массива
-        foreach ($categories->categoriesArray as $key=>$value){
-            if($key == 'Доступные средства'){
+        foreach ($categories->categoriesArray as $key => $value) {
+            if ($key == 'Доступные средства') {
                 continue;
             }
 
             $categories->categoriesArray[$key] = 0;
         }
-    }
-    else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
+    } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         //Добавление средств в наш кошелёк
         $categories->categoriesArray['Доступные средства'] += $_POST['betweenMoneyField'];
-    }
-    else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Доступные средства'])) {
+    } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Доступные средства'])) {
         //Вычитаем трату из наших средств
         $categories->categoriesArray['Доступные средства'] -= $_POST['betweenMoneyField'];
 
@@ -161,6 +158,53 @@ echo "<br/>Всего потрачено: " . array_sum($categories->categoriesA
 foreach ($result as $row) {
     $database->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] . " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";");
 }
+
+$url = 'https://www.cbr.ru/scripts/XML_daily.asp'; // Ссылка на XML-файл с курсами валют, будут самые актуальные значения курса
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url );
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, false);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+$content = curl_exec($ch);
+curl_close($ch);
+
+$xml = @simplexml_load_string($content);
+
+
+foreach ($xml->Valute as $item) {
+
+// R01235 - Доллар США
+// R01239 - Евро
+
+    if ($item['ID'] == 'R01235') {
+        $usd = $item->Value;
+    }
+
+    if ($item['ID'] == 'R01239') {
+        $eur = $item->Value;
+    }
+
+
+}
+
+if (!empty($usd)) {
+    $usd = str_replace(',', '.', $usd); // меняем , на .
+}
+
+if (!empty($eur)) {
+    $eur = str_replace(',', '.', $eur); // меняем , на .
+}
+
+
+echo $usd.'<br>';
+echo $eur;
+
+/*
+73.0081
+85.6823
+*/
 ?>
 
 </body>
