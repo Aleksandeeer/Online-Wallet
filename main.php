@@ -7,7 +7,7 @@ include 'php/CreatingVariables.php';
 <head>
     <title>Онлайн кошелёк</title>
     <meta charset="utf-8"/>
-    <link rel="stylesheet" href="mystyle.css">
+    <link rel="stylesheet" href="css/MainPageStyle.css">
     <!--Скрипт диаграммы-->
     <script src="https://www.google.com/jsapi"></script>
     <script>
