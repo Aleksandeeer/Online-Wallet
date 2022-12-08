@@ -64,3 +64,9 @@ input[name="acceptSubmit"]{
     left: 1570px;
     top: 123px;
 }
+
+div[id="moneyChart"]{
+    width: 500px;
+    height: 400px;
+    background: #a6a6a6
+}

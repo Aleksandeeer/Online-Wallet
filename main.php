@@ -7,7 +7,10 @@ include 'php/CreatingVariables.php';
 <head>
     <title>Онлайн кошелёк</title>
     <meta charset="utf-8"/>
+
+    <!--Подключение css-файла-->
     <link rel="stylesheet" href="css/MainPageStyle.css">
+
     <!--Скрипт диаграммы-->
     <script src="https://www.google.com/jsapi"></script>
     <script>
@@ -29,6 +32,7 @@ include 'php/CreatingVariables.php';
             chart.draw(data, options);
         }
     </script>
+    <!---->
 </head>
 <body>
 <h1>Кошелёк</h1>
@@ -99,7 +103,7 @@ include 'php/SavingCurrentWaste.php';
 </form>
 
 <!--Диаграмма-->
-<div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
+<div id="moneyChart"></div>
 
 <?php
 include 'php/DataBaseExec.php';
