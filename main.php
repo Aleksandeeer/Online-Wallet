@@ -19,19 +19,7 @@ include 'php/CreatingVariables.php';
         google.setOnLoadCallback(drawChart);
 
         function drawChart() {
-            var data = google.visualization.arrayToDataTable(<?php
-                echo "[['Категория', 'Затраты'],";
-                foreach ($categories->categoriesArray as $key => $value) {
-                    if ($key == 'Доступные средства')
-                        continue;
-                    echo "['" . $key . "', " . round($categories->categoriesArray[$key] / array_sum($categories->categoriesArray), 4) * 100 . "]";
-                    if ($key == array_key_last($categories->categoriesArray)) {
-                        continue;
-                    } else {
-                        echo ",";
-                    }
-                }
-                echo "]"; ?>);
+            var data = google.visualization.arrayToDataTable(<?php include 'php/CreatingDiagramArray.php'; ?>);
             var options = {
                 title: 'Статистика по потраченным средствам',
                 is3D: true,
@@ -92,7 +80,7 @@ include 'php/SavingCurrentWaste.php';
 
     <label>
         <input class="text-field" type="text" name="betweenMoneyField"
-               onkeyup="this.value = this.value.replace(/[^\d]/g,'');" size="13">
+               onkeyup="this.value = this.value.replace(/\D/g,'');" size="13">
     </label>
 
     <input type="submit" name="addButton"
