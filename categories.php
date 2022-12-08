@@ -14,6 +14,8 @@ class Categories{
         foreach ($result as $row) {
             $this->categoriesArray[$row['category']] = $row['spent'];
         }
+
+        array_shift($this->categoriesArray);
     }
 }
 ?>

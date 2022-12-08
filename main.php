@@ -9,11 +9,11 @@ $categories = new Categories();
 $database = new PDO('sqlite:categoriesDB.db');
 $result = $database->query('SELECT category, spent FROM categoriesTable')->fetchAll(PDO::FETCH_ASSOC);
 
+//Получение значения из промежуточного поля (если таковое имеется)
 $betweenValue = $_COOKIE['betweenValue'];
 
 //Получение данных из базы данных
 $categories->getDataFromDataBase($result);
-array_shift($categories->categoriesArray);
 ?>
 
 <html lang="ru">
@@ -21,6 +21,7 @@ array_shift($categories->categoriesArray);
     <title>Онлайн кошелёк</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="mystyle.css">
+    <!--Скрипт диаграммы-->
     <script src="https://www.google.com/jsapi"></script>
     <script>
         if (window.history.replaceState) {
@@ -54,14 +55,13 @@ array_shift($categories->categoriesArray);
         }
     </script>
 </head>
-<body style="text-align:center;">
-<h1 style="font-family: 'Courier New',sans-serif">Кошелёк</h1>
-<h3 style="font-family: 'Courier New',sans-serif">Тинькофф Банк</h3>
+<body>
+<h1>Кошелёк</h1>
+<h3>Тинькофф Банк</h3>
 
 <?php
 
 if ($_POST) {
-
     //Проверки
     if (($_POST['betweenMoneyField'] > $categories->categoriesArray['Доступные средства']) && isset($_POST['subtractButton'])) {
         echo '<script>alert("Warning: the subtracted value is more than the quantity\n\n" +
@@ -146,11 +146,13 @@ foreach ($categories->categoriesArray as $key => $value) {
 echo "<br/>Всего потрачено: " . array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'];
 ?>
 
+<!--Кнопка RESET-->
 <form method="post">
     <input type="submit" name="resetCategoriesButton"
            class="gradient-button" value="RESET"/>
 </form>
 
+<!--Диаграмма-->
 <div id="moneyChart" style="width: 500px; height: 400px; background: #a6a6a6"></div>
 
 <?php
@@ -158,53 +160,6 @@ echo "<br/>Всего потрачено: " . array_sum($categories->categoriesA
 foreach ($result as $row) {
     $database->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray[$row['category']] . " WHERE category = " . chr(39) . $row['category'] . chr(39) . ";");
 }
-
-$url = 'https://www.cbr.ru/scripts/XML_daily.asp'; // Ссылка на XML-файл с курсами валют, будут самые актуальные значения курса
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url );
-curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, false);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-$content = curl_exec($ch);
-curl_close($ch);
-
-$xml = @simplexml_load_string($content);
-
-
-foreach ($xml->Valute as $item) {
-
-// R01235 - Доллар США
-// R01239 - Евро
-
-    if ($item['ID'] == 'R01235') {
-        $usd = $item->Value;
-    }
-
-    if ($item['ID'] == 'R01239') {
-        $eur = $item->Value;
-    }
-
-
-}
-
-if (!empty($usd)) {
-    $usd = str_replace(',', '.', $usd); // меняем , на .
-}
-
-if (!empty($eur)) {
-    $eur = str_replace(',', '.', $eur); // меняем , на .
-}
-
-
-echo $usd.'<br>';
-echo $eur;
-
-/*
-73.0081
-85.6823
-*/
 ?>
 
 </body>
