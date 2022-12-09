@@ -23,7 +23,7 @@ else {
             continue;
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        echo '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php">';
+        echo '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php?key=' . $key . '">';
         echo $key . ": " . $value;
         echo '</a></p>';
     }
