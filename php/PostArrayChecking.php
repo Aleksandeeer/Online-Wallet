@@ -33,6 +33,6 @@ if ($_POST) {
         setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");
 
         //Редирект на страницу выбора категорий
-        header("Location:http://localhost:63342/" . basename(getcwd()) . "/html/categoriesPage.html");
+        header("Location:http://localhost:63342/" . basename(getcwd()) . "/pages/categoriesPage.html");
     }
 }
