@@ -1,0 +1,11 @@
+.moneyField, .text-field {
+    border-radius:10px;
+    border: 1px solid #eee;
+    transition: .3s border-color;
+    width: 200px;
+    height: 53px;
+    font-size: 30px;
+}
+.moneyField:hover, .text-field:hover {
+    border: 1px solid #aaa;
+}

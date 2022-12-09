@@ -10,6 +10,9 @@ include 'php/CreatingVariables.php';
 
     <!--Подключение css-файла-->
     <link rel="stylesheet" href="css/MainPageStyle.css">
+    <link rel="stylesheet" href="css/MainPage-buttons.css">
+    <link rel="stylesheet" href="css/MainPage-textfields.css">
+    <link rel="stylesheet" href="css/MainPage-divs.css">
 
     <!--Скрипт диаграммы-->
     <script src="https://www.google.com/jsapi"></script>
@@ -44,13 +47,14 @@ include 'php/SavingCurrentWaste.php';
 ?>
 
 <form method="post">
-    <label>
-        <input type="text" name="moneyField" readonly="readonly" size="20"
-               value=<?php include 'php/EchoAvailableResources.php'; ?>>
-    </label>
+    <div class="divAvailableMoney">
+        <label>
+            <input type="text" class="moneyField" name="moneyField" readonly="readonly" size="20"
+                   value=<?php include 'php/EchoAvailableResources.php'; ?>>
+        </label>
 
-    <input type="submit" name="resetButton"
-           class="gradient-button" value="Reset"/>
+        <button class="btn resetButton" name="resetButton">Сбросить</button>
+    </div>
 
     <div>
         <!--Выпадающий список-->
@@ -79,17 +83,16 @@ include 'php/SavingCurrentWaste.php';
 
     <br/><br/>
 
-    <input type="submit" name="subtractButton"
-           class="gradient-button" value="-"/>
+    <div class="divAddSubtract">
+        <button class="btn subtractButton" name="subtractButton">Покупка</button>
 
-    <label>
-        <input class="text-field" type="text" name="betweenMoneyField"
-               onkeyup="this.value = this.value.replace(/\D/g,'');" size="13">
-    </label>
+        <label>
+            <input class="text-field" type="text" name="betweenMoneyField"
+                   onkeyup="this.value = this.value.replace(/\D/g,'');" size="13">
+        </label>
 
-    <input type="submit" name="addButton"
-           class="gradient-button" value="+"/>
-
+        <button class="btn addButton" name="addButton">Добавить</button>
+    </div>
     <br/>
     <br/>
 </form>

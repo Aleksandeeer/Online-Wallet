@@ -1,0 +1,26 @@
+.divAddSubtract{
+    display: flex;
+    margin: 0px auto;
+    justify-content: center;
+}
+
+.divAvailableMoney{
+    display: flex;
+    margin: 0px auto;
+    justify-content: center;
+}
+
+/*Общий блок*/
+#moneyChart {
+    width: 30%;
+    margin: 0 auto;
+    text-align: center;
+    align-content: center;
+    background-color: #f2f2f2;
+}
+div[id="moneyChart"]{
+    width: 500px;
+    height: 400px;
+    background: #a6a6a6
+}
+/**/

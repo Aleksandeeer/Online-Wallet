@@ -1,56 +1,7 @@
-#moneyChart {
-    width: 30%;
-    margin: 0 auto;
-    text-align: center;
-    align-content: center;
-    background-color: #f2f2f2;
-}
-
 body{
-    text-align:center;
-}
-
-.gradient-button[name="resetButton"],
-.gradient-button[name="resetCategoriesButton"],
-.gradient-button[name="addButton"],
-.gradient-button[name="subtractButton"] {
-    height: 21px;
-    text-decoration: none;
-    display: inline-block;
-    color: white;
-    padding: 1px 5px;
-    border-radius: 3px;
+    background-color: #e3e3e3;
+    text-align: center;
     font-family: 'Montserrat', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    background-image: linear-gradient(to right, #f2f2f2 0%, #a6a6a6 51%, #666666 100%);
-    background-size: 200% auto;
-    box-shadow: 0 0 20px rgba(0, 0, 0, .1);
-    transition: .5s;
-}
-
-.gradient-button[name="resetButton"],
-.gradient-button[name="resetCategoriesButton"] {
-    width: 100px;
-}
-
-.gradient-button[name="addButton"] {
-    height: 21px;
-    width: 30px;
-    background-image: linear-gradient(to right, #808080 0%, #4dff4d 51%, #00e600 100%);
-}
-
-.gradient-button[name="subtractButton"] {
-    height: 21px;
-    width: 30px;
-    background-image: linear-gradient(to right, #808080 0%, #990000 51%, #ff0000 100%);
-}
-.gradient-button:hover {
-    background-position: right center;
-}
-
-h1, h3{
-    font-family: 'Courier New',sans-serif;
 }
 
 select{
@@ -59,14 +10,10 @@ select{
     top: 123px;
 }
 
-input[name="acceptSubmit"]{
-    position: absolute;
-    left: 1570px;
-    top: 123px;
+a {
+    text-decoration: none;
+    color: #0f7afc;
+    border-bottom: 1px solid;
+    border-bottom-color: rgba(15, 122, 252, 0.2);
 }
 
-div[id="moneyChart"]{
-    width: 500px;
-    height: 400px;
-    background: #a6a6a6
-}
