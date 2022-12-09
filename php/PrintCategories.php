@@ -6,11 +6,9 @@ if (isset($_POST['currencySelect'])) {
         if ($key == 'Доступные средства')
             continue;
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        echo '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php">';
+        echo '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php?key=' . $key . '">';
         echo $key . ": " . round($categories->categoriesArray[$key] / $_POST['currencySelect'][0], 2);
         echo '</a></p>';
-        echo "<br/>";
     }
 
     //Вывод суммарных затрат
@@ -22,7 +20,6 @@ else {
         if ($key == 'Доступные средства')
             continue;
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         echo '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php?key=' . $key . '">';
         echo $key . ": " . $value;
         echo '</a></p>';
