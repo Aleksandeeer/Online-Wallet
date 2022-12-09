@@ -12,7 +12,7 @@ if (isset($_POST['currencySelect'])) {
     }
 
     //Вывод суммарных затрат
-    echo "<br/>Всего потрачено: " . round((array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'])
+    echo "Всего потрачено: " . round((array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства'])
             / $_POST['currencySelect'][0], 2);
 } //Вывод затрат по категориям если мы выбирали какой-то конкретный курс некоторое время назад
 else {
