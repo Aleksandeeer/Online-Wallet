@@ -1,7 +1,6 @@
 <?php
 //Инициализация класса категорий
 include 'Classes/categories.php';
-include "Classes/currencyConverter.php";
 $categories = new Categories();
 
 //Подключение к базе данных (#1) трат по категориям и получение таблицы

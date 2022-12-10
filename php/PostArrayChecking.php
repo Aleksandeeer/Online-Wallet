@@ -13,6 +13,8 @@ if ($_POST) {
     if (isset($_POST['resetButton'])) {
         //Обнуление доступных средств
         $categories->categoriesArray['Доступные средства'] = 0;
+
+        $databaseCategories->exec("UPDATE categoriesTable SET spent = 0 WHERE category = 'Доступные средства'");
     } else if (isset($_POST['resetCategoriesButton'])) {
         //Обнуление категорий
         foreach ($categories->categoriesArray as $key => $value) {
@@ -30,9 +32,13 @@ if ($_POST) {
     } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         //Добавление средств в кошелёк
         $categories->categoriesArray['Доступные средства'] += $_POST['betweenMoneyField'];
+
+        $databaseCategories->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray['Доступные средства'] . " WHERE category = 'Доступные средства'");
     } else if (isset($_POST['subtractButton']) && strlen($_POST["betweenMoneyField"]) > 0 && ($_POST['betweenMoneyField'] <= $categories->categoriesArray['Доступные средства'])) {
         //Вычитаем трату из доступных средств
         $categories->categoriesArray['Доступные средства'] -= $_POST['betweenMoneyField'];
+
+        $databaseCategories->exec("UPDATE categoriesTable SET spent = " . $categories->categoriesArray['Доступные средства'] . " WHERE category = 'Доступные средства'");
 
         //Записываем трату в куки
         setcookie("betweenValue", $_POST['betweenMoneyField'], time() + 10000, "/");

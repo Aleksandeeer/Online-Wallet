@@ -19,6 +19,12 @@ include 'php/CreatingVariables.php';
 <h1>Кошелёк</h1>
 <h3>Тинькофф Банк</h3>
 
+<script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+    }
+</script>
+
 <?php
 include 'php/PostArrayChecking.php';
 include 'php/SavingCurrentWaste.php';
@@ -63,7 +69,6 @@ include 'php/SavingCurrentWaste.php';
 
 
 <?php
-include 'php/DataBaseExec.php';
 ?>
 
 </body>
