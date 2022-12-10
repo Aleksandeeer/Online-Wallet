@@ -20,7 +20,7 @@
     $databaseCategories = new PDO('sqlite:../databases/SpendingStats.db');
     echo "<tr> <th>Описание</th> <th>Потрачено</th> <th>Категория</th></tr>";
 
-    if($result = $databaseCategories->query('SELECT * FROM SpendingPoints WHERE category = ' . chr(39) . $_GET['key'] . chr(39) . ";")->fetchAll(PDO::FETCH_ASSOC)){
+    if ($result = $databaseCategories->query('SELECT * FROM SpendingPoints WHERE category = ' . chr(39) . $_GET['key'] . chr(39) . ";")->fetchAll(PDO::FETCH_ASSOC)) {
         foreach ($result as $row) {
             echo "<tr>";
             echo "<td>" . $row['name'] . "</td>";
@@ -28,8 +28,7 @@
             echo "<td>" . $row['category'] . "</td>";
             echo "</tr>";
         }
-    }
-    else{
+    } else {
         echo '<script>
                 if(alert("Ошибка: покупки по выбранной категории отсутствуют")){}
                 else{window.location.href = "http://localhost:63342/Online-Wallet/main.php";}

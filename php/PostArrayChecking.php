@@ -26,6 +26,7 @@ if ($_POST) {
         include 'DataBaseExec.php';
 
         $databaseSpendingStats->exec('DELETE FROM SpendingPoints;');
+
     } else if (isset($_POST['addButton']) && strlen($_POST["betweenMoneyField"]) > 0) {
         //Добавление средств в кошелёк
         $categories->categoriesArray['Доступные средства'] += $_POST['betweenMoneyField'];

@@ -15,7 +15,7 @@ foreach ($categories->categoriesArray as $key => $value){
     echo '<div class="column">';
     echo '<span>' . round($categories->categoriesArray[$key] / (array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства']), 4) * 100 . "%" . '</span>';
     echo '</div>';
-    echo '<span class="name">' . $key . " (" . $categories->categoriesArray[$key] . ")" . '</span>';
+    echo '<span class="name">' . '<p><a href = "http://localhost:63342/Online-Wallet/pages/chosenCategory.php?key=' . $key . '">' .$key . " (" . $categories->categoriesArray[$key] . ")" . "</a></p>" . '</span>';
     echo '</div>';
 }
 
