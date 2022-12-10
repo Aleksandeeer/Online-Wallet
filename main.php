@@ -34,31 +34,6 @@ include 'php/SavingCurrentWaste.php';
         <button class="btn resetButton" name="resetButton">Сбросить доступные средства</button>
     </div>
 
-    <div>
-        <!--Выпадающий список-->
-        <select name='currencySelect[]' id='selectId'>
-            <script>
-                var select = document.getElementById('selectId');
-                var currencyArray = <?php echo json_encode($currencyConverter->exchanges); ?>;
-
-                var option = document.createElement("option");
-                option.text = 'Российский рубль';
-                option.value = '1';
-                select.add(option, select[0]);
-                var i = 1;
-
-                for (var key in currencyArray) {
-                    option = document.createElement("option");
-                    option.text = key.substring(1, key.length - 1) + ': ' + currencyArray[key] + '₽';
-                    option.value = currencyArray[key];
-                    select.add(option, select[i]);
-                    i = i + 1;
-                }
-            </script>
-        </select>
-        <input name="acceptSubmit" type="submit" value="Подтвердить"/>
-    </div>
-
     <br/><br/>
 
     <div class="divAddSubtract">

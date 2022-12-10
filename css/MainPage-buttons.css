@@ -47,6 +47,7 @@ input[name="acceptSubmit"]{
     transition: background 300ms ease-in-out;
 
     margin-left: 10px;
+    width: 185px;
 }
 .addButton:hover {
     background-position: 0;
@@ -62,6 +63,7 @@ input[name="acceptSubmit"]{
     -webkit-transition: background 300ms ease-in-out;
     transition: background 300ms ease-in-out;
 
+    width: 185px;
     margin-right: 10px;
 }
 .subtractButton:hover {
@@ -81,4 +83,8 @@ input[name="acceptSubmit"]{
 .resetButton:hover {
     box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
     color: #3498db;
+}
+
+.resetButton[name="resetCategoriesButton"]{
+    margin: 0px auto;
 }

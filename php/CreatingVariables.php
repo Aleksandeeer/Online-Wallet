@@ -3,9 +3,6 @@
 include 'Classes/categories.php';
 include "Classes/currencyConverter.php";
 $categories = new Categories();
-$currencyConverter = new CurrencyConverter();
-
-$currencyConverter->getCurrency();
 
 //Подключение к базе данных (#1) трат по категориям и получение таблицы
 $databaseCategories = new PDO('sqlite:databases/categoriesDB.db');

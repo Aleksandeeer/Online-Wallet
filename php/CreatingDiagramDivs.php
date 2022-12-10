@@ -1,7 +1,7 @@
 <?php
 
 echo '<div class="section">';
-echo '<div class="skills">Затраты</div>';
+echo '<div class="skills"><a>Затраты</a></div>';
 echo '<div class="diagram">';
 
 foreach ($categories->categoriesArray as $key => $value){
