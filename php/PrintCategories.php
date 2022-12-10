@@ -16,6 +16,7 @@ if (isset($_POST['currencySelect'])) {
             / $_POST['currencySelect'][0], 2);
 } //Вывод затрат по категориям если мы выбирали какой-то конкретный курс некоторое время назад
 else {
+    
     foreach ($categories->categoriesArray as $key => $value) {
         if ($key == 'Доступные средства')
             continue;

@@ -13,29 +13,7 @@ include 'php/CreatingVariables.php';
     <link rel="stylesheet" href="css/MainPage-buttons.css">
     <link rel="stylesheet" href="css/MainPage-textfields.css">
     <link rel="stylesheet" href="css/MainPage-divs.css">
-
-    <!--Скрипт диаграммы-->
-    <script src="https://www.google.com/jsapi"></script>
-    <script>
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-
-        google.load("visualization", "1", {packages: ["corechart"]});
-        google.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable(<?php include 'php/CreatingDiagramArray.php'; ?>);
-            var options = {
-                title: 'Статистика по потраченным средствам',
-                is3D: true,
-                pieResidueSliceLabel: 'Остальное'
-            };
-            var chart = new google.visualization.PieChart(document.getElementById('moneyChart'));
-            chart.draw(data, options);
-        }
-    </script>
-    <!---->
+    <link rel="stylesheet" href="css/Main-diagram.css">
 </head>
 <body>
 <h1>Кошелёк</h1>
@@ -97,16 +75,35 @@ include 'php/SavingCurrentWaste.php';
     <br/>
 </form>
 
-<?php include "php/PrintCategories.php"; ?>
+<?php
+    echo '<div class="section">';
+    echo '<div class="skills">Затраты</div>';
+    echo '<div class="diagram">';
+
+    foreach ($categories->categoriesArray as $key => $value){
+        if($key == 'Доступные средства')
+            continue;
+
+        if(round($categories->categoriesArray[$key] / (array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства']), 2) * 100 == 0)
+            continue;
+
+        echo '<div class="skillBLock">';
+        echo '<div class="column">';
+        echo '<span>' . round($categories->categoriesArray[$key] / (array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства']), 4) * 100 . "%" . '</span>';
+        echo '</div>';
+        echo '<span class="name">' . $key . " (" . $categories->categoriesArray[$key] . ")" . '</span>';
+        echo '</div>';
+    }
+
+    echo '</div></div></div>';
+
+?>
 
 <!--Кнопка RESET-->
 <form method="post">
     <input type="submit" name="resetCategoriesButton"
            class="gradient-button" value="RESET"/>
 </form>
-
-<!--Диаграмма-->
-<div id="moneyChart"></div>
 
 <?php
 include 'php/DataBaseExec.php';
