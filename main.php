@@ -11,9 +11,9 @@ include 'php/CreatingVariables.php';
     <!--Подключение css-файла-->
     <link rel="stylesheet" href="css/MainPageStyle.css">
     <link rel="stylesheet" href="css/MainPage-buttons.css">
-    <link rel="stylesheet" href="css/MainPage-textfields.css">
+    <link rel="stylesheet" href="css/MainPage-text-fields.css">
     <link rel="stylesheet" href="css/MainPage-divs.css">
-    <link rel="stylesheet" href="css/Main-diagram.css">
+    <link rel="stylesheet" href="css/MainPage-diagram.css">
 </head>
 <body>
 <h1>Кошелёк</h1>
@@ -31,7 +31,7 @@ include 'php/SavingCurrentWaste.php';
                    value=<?php include 'php/EchoAvailableResources.php'; ?>>
         </label>
 
-        <button class="btn resetButton" name="resetButton">Сбросить</button>
+        <button class="btn resetButton" name="resetButton">Сбросить доступные средства</button>
     </div>
 
     <div>
@@ -75,35 +75,17 @@ include 'php/SavingCurrentWaste.php';
     <br/>
 </form>
 
-<?php
-    echo '<div class="section">';
-    echo '<div class="skills">Затраты</div>';
-    echo '<div class="diagram">';
+<div class="divDiagram">
+    <?php
+    include 'php/CreatingDiagramDivs.php';
+    ?>
 
-    foreach ($categories->categoriesArray as $key => $value){
-        if($key == 'Доступные средства')
-            continue;
+    <!--Кнопка RESET-->
+    <form method="post">
+        <button class="btn resetButton" name="resetCategoriesButton">Сбросить категории</button>
+    </form>
+</div>
 
-        if(round($categories->categoriesArray[$key] / (array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства']), 2) * 100 == 0)
-            continue;
-
-        echo '<div class="skillBLock">';
-        echo '<div class="column">';
-        echo '<span>' . round($categories->categoriesArray[$key] / (array_sum($categories->categoriesArray) - $categories->categoriesArray['Доступные средства']), 4) * 100 . "%" . '</span>';
-        echo '</div>';
-        echo '<span class="name">' . $key . " (" . $categories->categoriesArray[$key] . ")" . '</span>';
-        echo '</div>';
-    }
-
-    echo '</div></div></div>';
-
-?>
-
-<!--Кнопка RESET-->
-<form method="post">
-    <input type="submit" name="resetCategoriesButton"
-           class="gradient-button" value="RESET"/>
-</form>
 
 <?php
 include 'php/DataBaseExec.php';

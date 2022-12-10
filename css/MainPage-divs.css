@@ -1,10 +1,4 @@
-.divAddSubtract{
-    display: flex;
-    margin: 0px auto;
-    justify-content: center;
-}
-
-.divAvailableMoney{
+.divAddSubtract, .divAvailableMoney, .divDiagram{
     display: flex;
     margin: 0px auto;
     justify-content: center;
