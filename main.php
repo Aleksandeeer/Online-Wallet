@@ -69,6 +69,7 @@ include 'php/SavingCurrentWaste.php';
 
 
 <?php
+include "php/DataBaseExec.php";
 ?>
 
 </body>
